@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete", "Machete\Machete.csproj", "{0D58FBE5-1144-42E7-9A7F-F3BB311B6209}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Tests", "Machete.Tests\Machete.Tests.csproj", "{57509827-8581-4792-9561-9C25EA574789}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D58FBE5-1144-42E7-9A7F-F3BB311B6209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D58FBE5-1144-42E7-9A7F-F3BB311B6209}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D58FBE5-1144-42E7-9A7F-F3BB311B6209}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D58FBE5-1144-42E7-9A7F-F3BB311B6209}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57509827-8581-4792-9561-9C25EA574789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57509827-8581-4792-9561-9C25EA574789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57509827-8581-4792-9561-9C25EA574789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57509827-8581-4792-9561-9C25EA574789}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
