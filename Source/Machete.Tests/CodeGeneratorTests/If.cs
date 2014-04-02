@@ -15,7 +15,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@if (shouldGreet) {}";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "if (shouldGreet) {",
                 "}"
@@ -27,7 +27,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@if (shouldGreet) { Hello! }";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "if (shouldGreet) {",
                 "WriteLiteral(@\" Hello! \");",
@@ -40,7 +40,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@if (shouldGreet) { @person.Name }";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "if (shouldGreet) {",
                 "WriteLiteral(@\" \");",

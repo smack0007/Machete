@@ -15,16 +15,44 @@ namespace Machete
             Expression
         }
 
-        public string Generate(string template)
+		public string GenerateClass(string template)
+		{
+			StringBuilder output = new StringBuilder();
+
+			GenerateClass(output, template);
+
+			return output.ToString();
+		}
+
+        public string GenerateMethodBody(string template)
         {
             StringBuilder output = new StringBuilder();
 
-            Generate(output, template, 0, template.Length - 1);
+            GenerateMethodBody(output, template, 0, template.Length - 1);
             
-            return output.ToString().Trim();
+            return output.ToString();
         }
 
-        private static void Generate(StringBuilder output, string template, int start, int end)
+		private static void GenerateClass(StringBuilder output, string template)
+		{
+			output.AppendLine("using System;");
+			output.AppendLine();
+
+			output.AppendLine("namespace Machete.Templates");
+			output.AppendLine("{");
+			output.AppendLine("\tclass MacheteTemplate");
+			output.AppendLine("\t{");
+			output.AppendLine("\t\tpublic void ExecuteMethod()");
+			output.AppendLine("\t\t{");
+
+			GenerateMethodBody(output, template, 0, template.Length - 1);
+
+			output.AppendLine("\t\t}");
+			output.AppendLine("\t}");
+			output.AppendLine("}");
+		}
+
+        private static void GenerateMethodBody(StringBuilder output, string template, int start, int end)
         {
             StringBuilder buffer = new StringBuilder();
                                                 
@@ -207,7 +235,7 @@ namespace Machete
             int endCode = closeCurlyBrace - 1;
             
             if (startCode < endCode)
-                Generate(output, template, startCode, endCode);
+                GenerateMethodBody(output, template, startCode, endCode);
             
             output.AppendLine("}");
             

@@ -24,9 +24,9 @@ namespace Machete.Tests.CodeGeneratorTests
             return string.Join(Environment.NewLine, lines);
         }
 
-        protected void AssertGeneratedCode(string template, params string[] expected)
+        protected void AssertGeneratedMethodBody(string template, params string[] expected)
         {
-            string code = this.generator.Generate(template);
+            string code = this.generator.GenerateMethodBody(template).Trim();
             string[] actual = code
                 .Split(new string[] { Environment.NewLine }, StringSplitOptions.None)
                 .Select(x => x.Trim())

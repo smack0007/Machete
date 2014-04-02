@@ -15,7 +15,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello World!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello World!\");"
             );
@@ -26,7 +26,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello World!" + _ + "Goodbye World!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello World!",
                 "Goodbye World!\");"
@@ -38,7 +38,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello @Name!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello \");",
                 "Write(Name);",
@@ -51,7 +51,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello @Name1 and @Name2!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello \");",
                 "Write(Name1);",
@@ -66,7 +66,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello @Person.Name!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello \");",
                 "Write(Person.Name);",
@@ -79,7 +79,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello @Person1.Name and @Person2.Name!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello \");",
                 "Write(Person1.Name);",
@@ -94,7 +94,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "Hello @Person[0], @Person[1] and @Person[2]!";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "WriteLiteral(@\"Hello \");",
                 "Write(Person[0]);",

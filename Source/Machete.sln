@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete", "Machete\Machete.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Tests", "Machete.Tests\Machete.Tests.csproj", "{57509827-8581-4792-9561-9C25EA574789}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacheteDemo", "MacheteDemo\MacheteDemo.csproj", "{91D2478A-18D2-4F84-A7B1-AE6AE4F0E37B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{57509827-8581-4792-9561-9C25EA574789}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57509827-8581-4792-9561-9C25EA574789}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57509827-8581-4792-9561-9C25EA574789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D2478A-18D2-4F84-A7B1-AE6AE4F0E37B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D2478A-18D2-4F84-A7B1-AE6AE4F0E37B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D2478A-18D2-4F84-A7B1-AE6AE4F0E37B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D2478A-18D2-4F84-A7B1-AE6AE4F0E37B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,7 +15,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@foreach (var person in People) {}";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "foreach (var person in People) {",
                 "}"
@@ -27,7 +27,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@foreach (var person in People) { Hello! }";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "foreach (var person in People) {",
                 "WriteLiteral(@\" Hello! \");",
@@ -40,7 +40,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@foreach (var person in People) { @person.Name }";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "foreach (var person in People) {",
                 "WriteLiteral(@\" \");",

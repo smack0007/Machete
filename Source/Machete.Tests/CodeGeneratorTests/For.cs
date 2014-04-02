@@ -15,7 +15,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@for (int i = 0; i < 10; i++) {}";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "for (int i = 0; i < 10; i++) {",
                 "}"
@@ -27,7 +27,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@for (int i = 0; i < 10; i++) { Hello! }";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "for (int i = 0; i < 10; i++) {",
                 "WriteLiteral(@\" Hello! \");",
@@ -40,7 +40,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = "@for (int i = 0; i < 10; i++) { @i }";
 
-            this.AssertGeneratedCode(
+            this.AssertGeneratedMethodBody(
                 template,
                 "for (int i = 0; i < 10; i++) {",
                 "WriteLiteral(@\" \");",

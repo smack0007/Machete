@@ -15,7 +15,7 @@ namespace Machete.Tests.CodeGeneratorTests
         {
             string template = BuildTemplate("@{ x = 5; } Hello!");
 
-            AssertGeneratedCode(
+            AssertGeneratedMethodBody(
                 template,
                 "x = 5;",
                 "WriteLiteral(@\" Hello!\");"
@@ -32,7 +32,7 @@ namespace Machete.Tests.CodeGeneratorTests
                 "}",
                 "(@x, @y)");
 
-            AssertGeneratedCode(
+            AssertGeneratedMethodBody(
                 template,
                 "x = 5;",
                 "y = 10;",
