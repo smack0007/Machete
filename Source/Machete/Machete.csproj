@@ -60,7 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGenerator.cs" />
+    <Compile Include="CodeGeneratorParameters.cs" />
+    <Compile Include="CodeGeneratorResult.cs" />
+    <Compile Include="Compiler.cs" />
+    <Compile Include="CompilerParameters.cs" />
     <Compile Include="MacheteException.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
+    <Compile Include="Template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

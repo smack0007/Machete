@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Machete.Tests.CodeGeneratorTests
 {
-    [TestFixture]
     public class CodeBlock : CodeGeneratorTestFixture
     {
-        [Test]
+        [Fact]
         public void Inline_Code_Block()
         {
             string template = BuildTemplate("@{ x = 5; } Hello!");
@@ -22,7 +21,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void MultiLine_Code_Block()
         {
             string template = BuildTemplate(

@@ -14,45 +14,61 @@ namespace Machete
 
             Expression
         }
-
-		public string GenerateClass(string template)
+				
+		public CodeGeneratorResult Generate(string template, CodeGeneratorParameters parameters)
 		{
+			if (template == null)
+				throw new ArgumentNullException("template");
+
 			StringBuilder output = new StringBuilder();
+			CodeGeneratorResult result = new CodeGeneratorResult();
 
-			GenerateClass(output, template);
+			GenerateClass(output, template, parameters, result);
 
-			return output.ToString();
+			result.Code = output.ToString();
+
+			return result;
 		}
 
         public string GenerateMethodBody(string template)
         {
+			if (template == null)
+				throw new ArgumentNullException("template");
+
             StringBuilder output = new StringBuilder();
 
-            GenerateMethodBody(output, template, 0, template.Length - 1);
+            GenerateMethodBody(output, template, 0, template.Length - 1, new CodeGeneratorResult());
             
             return output.ToString();
         }
 
-		private static void GenerateClass(StringBuilder output, string template)
+		private static void GenerateClass(StringBuilder output, string template, CodeGeneratorParameters parameters, CodeGeneratorResult result)
 		{
+			StringBuilder methodOutput = new StringBuilder();
+			GenerateMethodBody(methodOutput, template, 0, template.Length - 1, result);
+
 			output.AppendLine("using System;");
+
+			foreach (var usingString in result.Usings)
+				output.AppendLine("using {0};", usingString);
+
 			output.AppendLine();
 
 			output.AppendLine("namespace Machete.Templates");
 			output.AppendLine("{");
-			output.AppendLine("\tclass MacheteTemplate");
+			output.AppendLine("\tpublic class {0} : {1}", parameters.ClassName, parameters.BaseClassName);
 			output.AppendLine("\t{");
-			output.AppendLine("\t\tpublic void ExecuteMethod()");
+			output.AppendLine("\t\tprotected override void Execute()");
 			output.AppendLine("\t\t{");
 
-			GenerateMethodBody(output, template, 0, template.Length - 1);
+			output.Append(methodOutput);
 
 			output.AppendLine("\t\t}");
 			output.AppendLine("\t}");
 			output.AppendLine("}");
 		}
 
-        private static void GenerateMethodBody(StringBuilder output, string template, int start, int end)
+        private static void GenerateMethodBody(StringBuilder output, string template, int start, int end, CodeGeneratorResult result)
         {
             StringBuilder buffer = new StringBuilder();
                                                 
@@ -70,16 +86,20 @@ namespace Machete
                     }
                     else if (LookAhead(template, i, "for"))
                     {
-                        ParseLogicBlock("for", template, ref i, buffer, output);
+                        ParseLogicBlock("for", template, ref i, buffer, output, result);
                     }
                     else if (LookAhead(template, i, "foreach"))
                     {
-                        ParseLogicBlock("foreach", template, ref i, buffer, output);
+						ParseLogicBlock("foreach", template, ref i, buffer, output, result);
                     }
                     else if (LookAhead(template, i, "if"))
                     {
-                        ParseLogicBlock("if", template, ref i, buffer, output);
+						ParseLogicBlock("if", template, ref i, buffer, output, result);
                     }
+					else if (LookAhead(template, i, "using"))
+					{
+						ParseDeclaration("using", template, ref i, buffer, output, (x) => result.Usings.Add(x));
+					}
                     else
                     {
                         ParseExpression(template, ref i, buffer, output);
@@ -207,7 +227,7 @@ namespace Machete
             i = closeCurlyBrace + 1;
         }
 
-        private static void ParseLogicBlock(string type, string template, ref int i, StringBuilder buffer, StringBuilder output)
+        private static void ParseLogicBlock(string type, string template, ref int i, StringBuilder buffer, StringBuilder output, CodeGeneratorResult result)
         {
             int openParen = SearchAhead(template, i, "(");
 
@@ -235,13 +255,13 @@ namespace Machete
             int endCode = closeCurlyBrace - 1;
             
             if (startCode < endCode)
-                GenerateMethodBody(output, template, startCode, endCode);
+                GenerateMethodBody(output, template, startCode, endCode, result);
             
             output.AppendLine("}");
             
             i = closeCurlyBrace + 1;
         }
-
+				
         private static void ParseExpression(string template, ref int i, StringBuilder buffer, StringBuilder output)
         {
             bool finished = false;
@@ -299,5 +319,18 @@ namespace Machete
                 i++;
             }
         }
+
+		private static void ParseDeclaration(string type, string template, ref int i, StringBuilder buffer, StringBuilder output, Action<string> action)
+		{
+			int endOfLine = SearchAhead(template, i, Environment.NewLine);
+
+			if (endOfLine == -1)
+				endOfLine = template.Length;
+
+			string content = template.Substring(i + type.Length + 1, endOfLine - i - type.Length - 1);
+			action(content);
+
+			i = endOfLine + 1;
+		}
     }
 }

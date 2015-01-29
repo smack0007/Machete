@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Machete.Tests.CodeGeneratorTests
 {
-    [TestFixture]
     public class If : CodeGeneratorTestFixture
     {
-        [Test]
+		[Fact]
         public void No_Block()
         {
             string template = "@if (shouldGreet) {}";
@@ -22,7 +21,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void Single_Literal_Block()
         {
             string template = "@if (shouldGreet) { Hello! }";
@@ -35,7 +34,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void Single_Expression_Block()
         {
             string template = "@if (shouldGreet) { @person.Name }";
@@ -49,5 +48,20 @@ namespace Machete.Tests.CodeGeneratorTests
                 "}"
             );
         }
+
+		[Fact]
+		public void Block_With_Multiple_Lines()
+		{
+			string template = "@if (shouldGreet) {" + _ + "Hello!" + _ + "}";
+
+			this.AssertGeneratedMethodBody(
+				template,
+				"if (shouldGreet) {",
+				"WriteLiteral(@\"",
+				"Hello!",
+				"\");",
+				"}"
+			);
+		}
     }
 }

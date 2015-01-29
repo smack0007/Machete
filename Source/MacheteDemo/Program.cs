@@ -9,11 +9,35 @@ namespace MacheteDemo
 {
 	class Program
 	{
+		static readonly string _ = Environment.NewLine;
+
 		static void Main(string[] args)
 		{
-			CodeGenerator codeGenerator = new CodeGenerator();
-			Console.WriteLine(codeGenerator.GenerateClass("Hello @Name!"));
+			string templateSource = @"
+@using System.Diagnostics
 
+@for (int i = 0; i < 10; i++) {
+Hello!
+}";
+
+			CodeGenerator codeGenerator = new CodeGenerator();
+
+			var codeGeneratorParameters = new CodeGeneratorParameters();
+			codeGeneratorParameters.ClassName = "Foo";
+
+			var codeGeneratorResult = codeGenerator.Generate(templateSource, codeGeneratorParameters);
+
+			Console.WriteLine(codeGeneratorResult.Code);
+
+			Compiler compiler = new Compiler();
+
+			var compilerParameters = new CompilerParameters();
+			compilerParameters.CodeGenerator.ClassName = "Foo";
+			
+			var template = compiler.Compile(templateSource, compilerParameters);
+					
+			Console.WriteLine(template.Run());
+						
 			Console.WriteLine("Press any key to continue...");
 			Console.ReadKey();
 		}

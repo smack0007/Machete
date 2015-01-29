@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Machete.Tests.CodeGeneratorTests
 {
-    [TestFixture]
     public class ExpressionsWithoutHtml : CodeGeneratorTestFixture
     {
-        [Test]
+        [Fact]
         public void Without_Expression()
         {
             string template = "Hello World!";
@@ -21,7 +20,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void Multiline_Without_Expression()
         {
             string template = "Hello World!" + _ + "Goodbye World!";
@@ -33,7 +32,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void With_One_Expression_Of_Depth_One()
         {
             string template = "Hello @Name!";
@@ -46,7 +45,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void With_Two_Expressions_Of_Depth_One()
         {
             string template = "Hello @Name1 and @Name2!";
@@ -61,7 +60,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void With_One_Expression_Of_Depth_Two()
         {
             string template = "Hello @Person.Name!";
@@ -74,7 +73,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void With_Two_Expression_Of_Depth_Two()
         {
             string template = "Hello @Person1.Name and @Person2.Name!";
@@ -89,7 +88,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-        [Test]
+		[Fact]
         public void Array_Index_Expressions()
         {
             string template = "Hello @Person[0], @Person[1] and @Person[2]!";
