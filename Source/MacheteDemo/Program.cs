@@ -15,9 +15,11 @@ namespace MacheteDemo
 		{
 			string templateSource = @"
 @using System.Diagnostics
+@property int Count
+@property string Name
 
-@for (int i = 0; i < 10; i++) {
-Hello!
+@for (int i = 0; i < Count; i++) {
+Hello @Name!
 }";
 
 			CodeGenerator codeGenerator = new CodeGenerator();
@@ -35,7 +37,9 @@ Hello!
 			compilerParameters.CodeGenerator.ClassName = "Foo";
 			
 			var template = compiler.Compile(templateSource, compilerParameters);
-					
+			template.SetPropertyValue("Count", 20);
+			template.SetPropertyValue("Name", "Bob Freeman!");
+
 			Console.WriteLine(template.Run());
 						
 			Console.WriteLine("Press any key to continue...");

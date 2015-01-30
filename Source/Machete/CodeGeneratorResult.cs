@@ -26,10 +26,17 @@ namespace Machete
 			private set;
 		}
 
+		public List<string> Properties
+		{
+			get;
+			private set;
+		}
+
 		public CodeGeneratorResult()
 		{
 			this.ReferencedAssemblies = new List<string>();
 			this.Usings = new List<string>();
+			this.Properties = new List<string>();
 		}
 	}
 }

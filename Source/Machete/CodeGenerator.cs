@@ -58,6 +58,11 @@ namespace Machete
 			output.AppendLine("{");
 			output.AppendLine("\tpublic class {0} : {1}", parameters.ClassName, parameters.BaseClassName);
 			output.AppendLine("\t{");
+
+			foreach (var propertyString in result.Properties)
+				output.AppendLine("\t\tpublic {0} {{ get; set; }}", propertyString);
+
+			output.AppendLine();
 			output.AppendLine("\t\tprotected override void Execute()");
 			output.AppendLine("\t\t{");
 
@@ -96,6 +101,10 @@ namespace Machete
                     {
 						ParseLogicBlock("if", template, ref i, buffer, output, result);
                     }
+					else if (LookAhead(template, i, "property"))
+					{
+						ParseDeclaration("property", template, ref i, buffer, output, (x) => result.Properties.Add(x));
+					}
 					else if (LookAhead(template, i, "using"))
 					{
 						ParseDeclaration("using", template, ref i, buffer, output, (x) => result.Usings.Add(x));
