@@ -53,6 +53,7 @@
     <Compile Include="CodeGeneratorTests\ForEach.cs" />
     <Compile Include="CodeGeneratorTests\If.cs" />
     <Compile Include="CodeGeneratorTests\While.cs" />
+    <Compile Include="IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

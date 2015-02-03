@@ -82,10 +82,17 @@ namespace Machete
             {
                 if (template[i] == '@')
                 {
+					if (LookAhead(template, i, "@@"))
+					{
+						buffer.Append("@");
+						i += 2;
+						continue;
+					}
+
                     FlushBuffer(BufferContents.Literal, buffer, output);
 
                     i++;
-                    if (LookAhead(template, i, "{"))
+					if (LookAhead(template, i, "{"))
                     {
                         ParseCodeBlock(template, ref i, buffer, output);
                     }
@@ -108,6 +115,10 @@ namespace Machete
 					else if (LookAhead(template, i, "using"))
 					{
 						ParseDeclaration("using", template, ref i, buffer, output, (x) => result.Usings.Add(x));
+					}
+					else if (LookAhead(template, i, "var"))
+					{
+						ParseDeclaration("var", template, ref i, buffer, output, (x) => output.AppendLine("{0};", x));
 					}
 					else if (LookAhead(template, i, "while"))
 					{
@@ -343,7 +354,7 @@ namespace Machete
 			string content = template.Substring(i + type.Length + 1, endOfLine - i - type.Length - 1);
 			action(content);
 
-			i = endOfLine + 1;
+			i = endOfLine + Environment.NewLine.Length;
 		}
     }
 }
