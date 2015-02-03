@@ -34,13 +34,17 @@ Hello @Name!
 			Compiler compiler = new Compiler();
 
 			var compilerParameters = new CompilerParameters();
-			compilerParameters.CodeGenerator.ClassName = "Foo";
 			
 			var template = compiler.Compile(templateSource, compilerParameters);
 			template.SetPropertyValue("Count", 20);
-			template.SetPropertyValue("Name", "Bob Freeman!");
+			template.SetPropertyValue("Name", "Bob Freeman");
+			
+			var template2 = compiler.Compile(templateSource, compilerParameters);
+			template2.SetPropertyValue("Count", 5);
+			template2.SetPropertyValue("Name", "John Doe");
 
 			Console.WriteLine(template.Run());
+			Console.WriteLine(template2.Run());
 						
 			Console.WriteLine("Press any key to continue...");
 			Console.ReadKey();

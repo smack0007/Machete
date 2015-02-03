@@ -17,13 +17,25 @@ namespace Machete
 		{
 			this.codeGenerator = new CodeGenerator();
 		}
-
-		public Template Compile(string template, CompilerParameters parameters)
+				
+		public T Compile<T>(string template, CompilerParameters parameters)
+			where T: Template
 		{
+			if (template == null)
+				throw new ArgumentNullException("template");
+
 			if (parameters == null)
 				throw new ArgumentNullException("parameters");
 
-			var generatorResult = this.codeGenerator.Generate(template, parameters.CodeGenerator);
+			this.compileCount++;
+
+			var generatorParameters = new CodeGeneratorParameters()
+			{
+				ClassName = "Template" + this.compileCount,
+				BaseClassName = typeof(T).FullName
+			};
+
+			var generatorResult = this.codeGenerator.Generate(template, generatorParameters);
 
 			var compilerParams = new System.CodeDom.Compiler.CompilerParameters() { GenerateInMemory = true };
 			compilerParams.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
@@ -37,6 +49,8 @@ namespace Machete
 
 				compilerParams.ReferencedAssemblies.Add(name);
 			}
+
+			compilerParams.ReferencedAssemblies.Add(typeof(T).Assembly.Location);
 
 			var compiler = CodeDomProvider.CreateProvider("CSharp");
 			var compilerResults = compiler.CompileAssemblyFromSource(compilerParams, generatorResult.Code);
@@ -53,7 +67,12 @@ namespace Machete
 				throw new MacheteException(errors.ToString());
 			}
 
-			return (Template)Activator.CreateInstance(compilerResults.CompiledAssembly.GetType("Machete.Templates." + parameters.CodeGenerator.ClassName));
+			return (T)Activator.CreateInstance(compilerResults.CompiledAssembly.GetType("Machete.Templates." + generatorParameters.ClassName));
+		}
+
+		public Template Compile(string template, CompilerParameters parameters)
+		{
+			return this.Compile<Template>(template, parameters);
 		}
 	}
 }
