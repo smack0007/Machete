@@ -109,6 +109,10 @@ namespace Machete
 					{
 						ParseDeclaration("using", template, ref i, buffer, output, (x) => result.Usings.Add(x));
 					}
+					else if (LookAhead(template, i, "while"))
+					{
+						ParseLogicBlock("while", template, ref i, buffer, output, result);
+					}
                     else
                     {
                         ParseExpression(template, ref i, buffer, output);

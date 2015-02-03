@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 namespace Machete.Tests.CodeGeneratorTests
 {
+	[TestFixture]
     public class ForEach : CodeGeneratorTestFixture
     {
-		[Fact]
+		[Test]
         public void No_Block()
         {
             string template = "@foreach (var person in People) {}";
@@ -21,7 +22,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-		[Fact]
+		[Test]
         public void Single_Literal_Block()
         {
             string template = "@foreach (var person in People) { Hello! }";
@@ -34,7 +35,7 @@ namespace Machete.Tests.CodeGeneratorTests
             );
         }
 
-		[Fact]
+		[Test]
         public void Single_Expression_Block()
         {
             string template = "@foreach (var person in People) { @person.Name }";

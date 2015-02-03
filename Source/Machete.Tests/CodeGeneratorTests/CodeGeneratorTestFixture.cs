@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 namespace Machete.Tests.CodeGeneratorTests
 {
@@ -35,7 +35,7 @@ namespace Machete.Tests.CodeGeneratorTests
             if (expected.Length != actual.Length)
             {
                 Console.WriteLine(code);
-                Assert.True(false, string.Format("Expected line count is {0} but actual line count was {1}.", expected.Length, actual.Length));
+                Assert.Fail("Expected line count is {0} but actual line count was {1}.", expected.Length, actual.Length);
             }
             
             for (int i = 0; i < actual.Length; i++)
@@ -43,7 +43,7 @@ namespace Machete.Tests.CodeGeneratorTests
                 if (expected[i] != actual[i])
                 {
                     Console.WriteLine(code);
-                    Assert.True(false, string.Format("Line {0}: Expected \"{1}\" but actual was \"{2}\".", i + 1, expected[i], actual[i]));
+                    Assert.Fail("Line {0}: Expected \"{1}\" but actual was \"{2}\".", i + 1, expected[i], actual[i]);
                 }
             }
         }
