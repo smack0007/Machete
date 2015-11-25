@@ -35,11 +35,11 @@ Hello @Name!
 
 			var compilerParameters = new CompilerParameters();
 			
-			var template = compiler.Compile(templateSource, compilerParameters);
+			var template = compiler.CompileTemplate(templateSource, compilerParameters);
 			template.SetPropertyValue("Count", 20);
 			template.SetPropertyValue("Name", "Bob Freeman");
 			
-			var template2 = compiler.Compile(templateSource, compilerParameters);
+			var template2 = compiler.CompileTemplate(templateSource, compilerParameters);
 			template2.SetPropertyValue("Count", 5);
 			template2.SetPropertyValue("Name", "John Doe");
 

@@ -21,7 +21,7 @@ namespace Machete.Tests
 			try
 			{
 				Compiler compiler = new Compiler();
-				template = compiler.Compile(input, new CompilerParameters());
+				template = compiler.CompileTemplate(input, new CompilerParameters());
 
 				foreach (var pair in properties)
 				{
