@@ -1,13 +1,9 @@
-﻿using Machete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Machete;
 
 namespace MacheteDemo
 {
-	class Program
+    class Program
 	{
 		static readonly string _ = Environment.NewLine;
 

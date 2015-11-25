@@ -346,10 +346,13 @@ namespace Machete
 
 		private static void ParseDeclaration(string type, string template, ref int i, StringBuilder buffer, StringBuilder output, Action<string> action)
 		{
-			int endOfLine = SearchAhead(template, i, Environment.NewLine);
+			int endOfLine = SearchAhead(template, i, "\n");
 
 			if (endOfLine == -1)
 				endOfLine = template.Length;
+
+            if (template[endOfLine - 1] == '\r')
+                endOfLine--;
 
 			string content = template.Substring(i + type.Length + 1, endOfLine - i - type.Length - 1);
 			action(content);
