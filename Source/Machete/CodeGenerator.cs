@@ -347,17 +347,21 @@ namespace Machete
 		private static void ParseDeclaration(string type, string template, ref int i, StringBuilder buffer, StringBuilder output, Action<string> action)
 		{
 			int endOfLine = SearchAhead(template, i, "\n");
+            int newLineLength = 1;
 
 			if (endOfLine == -1)
 				endOfLine = template.Length;
 
             if (template[endOfLine - 1] == '\r')
+            {
                 endOfLine--;
+                newLineLength++;
+            }
 
 			string content = template.Substring(i + type.Length + 1, endOfLine - i - type.Length - 1);
 			action(content);
 
-			i = endOfLine + Environment.NewLine.Length;
+			i = endOfLine + newLineLength;
 		}
     }
 }
