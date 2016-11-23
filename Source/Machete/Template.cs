@@ -10,11 +10,11 @@ namespace Machete
 {
 	public abstract class Template
 	{
-		StringBuilder output;
+		private StringBuilder output;
 
 		public string Run()
 		{
-			this.output = new StringBuilder();
+			this.output = new StringBuilder(1024);
 
 			this.Execute();
 

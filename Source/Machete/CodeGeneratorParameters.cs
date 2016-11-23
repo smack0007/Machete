@@ -1,29 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Machete
+﻿namespace Machete
 {
-	public class CodeGeneratorParameters
+    public class CodeGeneratorParameters
 	{
-		public string ClassName
-		{
-			get;
-			set;
-		}
+        public string ClassName { get; set; } = "MyTemplate";
 
-		public string BaseClassName
-		{
-			get;
-			set;
-		}
-
-		public CodeGeneratorParameters()
-		{
-			this.ClassName = "MyTemplate";
-			this.BaseClassName = "Template";
-		}
+        public string BaseClassName { get; set; } = "Template";
 	}
 }
