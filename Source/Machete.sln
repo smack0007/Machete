@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete", "Machete\Machete.csproj", "{0D58FBE5-1144-42E7-9A7F-F3BB311B6209}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Tests", "Machete.Tests\Machete.Tests.csproj", "{57509827-8581-4792-9561-9C25EA574789}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacheteDemo", "MacheteDemo\MacheteDemo.csproj", "{91D2478A-18D2-4F84-A7B1-AE6AE4F0E37B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E6428BF8-0D19-40D3-A27C-B59A28E49D39}"
+	ProjectSection(SolutionItems) = preProject
+		..\Build\CopyOutputIfFileExists.targets = ..\Build\CopyOutputIfFileExists.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
