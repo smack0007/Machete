@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Machete.Tests.CodeGeneratorTests
@@ -23,9 +20,19 @@ namespace Machete.Tests.CodeGeneratorTests
             return string.Join(Environment.NewLine, lines);
         }
 
+        protected virtual CodeGeneratorParameters CreateCodeGeneratorParameters()
+        {
+            return new CodeGeneratorParameters()
+            {
+                IncludeLineDirectives = false
+            };
+        }
+
         protected void AssertGeneratedMethodBody(string template, params string[] expected)
         {
-            string code = this.generator.GenerateMethodBody(template).Trim();
+            var codeGeneratorParams = this.CreateCodeGeneratorParameters();
+
+            string code = this.generator.GenerateMethodBody(template, codeGeneratorParams).Trim();
             
 			string[] actual = code
                 .Split(new string[] { Environment.NewLine }, StringSplitOptions.None)

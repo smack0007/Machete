@@ -50,6 +50,7 @@
     <Compile Include="CodeGeneratorTests\For.cs" />
     <Compile Include="CodeGeneratorTests\ForEach.cs" />
     <Compile Include="CodeGeneratorTests\If.cs" />
+    <Compile Include="CodeGeneratorTests\LineDirectives.cs" />
     <Compile Include="CodeGeneratorTests\While.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

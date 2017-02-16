@@ -58,8 +58,7 @@ namespace Machete.Tests.CodeGeneratorTests
 			this.AssertGeneratedMethodBody(
 				template,
 				"if (shouldGreet) {",
-				"WriteLiteral(@\"",
-				"Hello!",
+				"WriteLiteral(@\"Hello!",
 				"\");",
 				"}"
 			);

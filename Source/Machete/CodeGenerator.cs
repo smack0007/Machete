@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Machete
 {
@@ -30,22 +27,48 @@ namespace Machete
 			return result;
 		}
 
-        public string GenerateMethodBody(string template)
+        public string GenerateMethodBody(string template, CodeGeneratorParameters parameters)
         {
 			if (template == null)
-				throw new ArgumentNullException("template");
+				throw new ArgumentNullException(nameof(template));
+
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
 
             StringBuilder output = new StringBuilder();
 
-            GenerateMethodBody(output, template, 0, template.Length - 1, new CodeGeneratorResult());
+            int lineNumber = 1;
+
+            GenerateMethodBody(
+                output,
+                template,
+                parameters,
+                0,
+                template.Length - 1,
+                ref lineNumber,
+                new CodeGeneratorResult());
             
             return output.ToString();
         }
 
-		private static void GenerateClass(StringBuilder output, string template, CodeGeneratorParameters parameters, CodeGeneratorResult result)
+		private static void GenerateClass(
+            StringBuilder output,
+            string template,
+            CodeGeneratorParameters parameters,
+            CodeGeneratorResult result)
 		{
 			StringBuilder methodOutput = new StringBuilder();
-			GenerateMethodBody(methodOutput, template, 0, template.Length - 1, result);
+
+            int lineNumber = 1;
+
+            GenerateMethodBody(
+                methodOutput,
+                template,
+                parameters,
+                0,
+                template.Length - 1,
+                ref lineNumber,
+                result);
 
 			output.AppendLine("using System;");
 
@@ -66,17 +89,24 @@ namespace Machete
 			output.AppendLine("\t\tprotected override void Execute()");
 			output.AppendLine("\t\t{");
 
-			output.Append(methodOutput);
+            output.Append(methodOutput);
 
 			output.AppendLine("\t\t}");
 			output.AppendLine("\t}");
 			output.AppendLine("}");
 		}
 
-        private static void GenerateMethodBody(StringBuilder output, string template, int start, int end, CodeGeneratorResult result)
+        private static void GenerateMethodBody(
+            StringBuilder output,
+            string template,
+            CodeGeneratorParameters parameters,
+            int start,
+            int end,
+            ref int lineNumber,
+            CodeGeneratorResult result)
         {
-            StringBuilder buffer = new StringBuilder();
-                                                
+            StringBuilder buffer = new StringBuilder(1024);
+
             int i = start;
             while (i <= end)
             {
@@ -89,45 +119,61 @@ namespace Machete
 						continue;
 					}
 
-                    FlushBuffer(BufferContents.Literal, buffer, output);
+                    if (buffer.Length != 0)
+                    {
+                        string bufferContents = buffer.ToString();
+
+                        FlushBuffer(
+                            parameters,
+                            BufferContents.Literal,
+                            buffer,
+                            output,
+                            lineNumber);
+
+                        lineNumber += CountOccurences(bufferContents, 0, bufferContents.Length, Environment.NewLine);
+                    }
 
                     i++;
+                    int beforePos = i;
+
 					if (LookAhead(template, i, "{"))
                     {
-                        ParseCodeBlock(template, ref i, buffer, output);
+                        ParseCodeBlock(template, parameters, ref i, ref lineNumber, buffer, output);
                     }
                     else if (LookAhead(template, i, "for"))
                     {
-                        ParseLogicBlock("for", template, ref i, buffer, output, result);
+                        ParseLogicBlock("for", template, parameters, ref i, ref lineNumber, buffer, output, result);
                     }
                     else if (LookAhead(template, i, "foreach"))
                     {
-						ParseLogicBlock("foreach", template, ref i, buffer, output, result);
+						ParseLogicBlock("foreach", template, parameters, ref i, ref lineNumber, buffer, output, result);
                     }
                     else if (LookAhead(template, i, "if"))
                     {
-						ParseLogicBlock("if", template, ref i, buffer, output, result);
+						ParseLogicBlock("if", template, parameters, ref i, ref lineNumber, buffer, output, result);
                     }
 					else if (LookAhead(template, i, "property"))
 					{
-						ParseDeclaration("property", template, ref i, buffer, output, (x) => result.Properties.Add(x));
+						ParseDeclaration("property", template, parameters, ref i, ref lineNumber, buffer, output, (x) => result.Properties.Add(x));
 					}
 					else if (LookAhead(template, i, "using"))
 					{
-						ParseDeclaration("using", template, ref i, buffer, output, (x) => result.Usings.Add(x));
+						ParseDeclaration("using", template, parameters, ref i, ref lineNumber, buffer, output, (x) => result.Usings.Add(x));
 					}
 					else if (LookAhead(template, i, "var"))
 					{
-						ParseDeclaration("var", template, ref i, buffer, output, (x) => output.AppendLine("{0};", x));
+						ParseDeclaration("var", template, parameters, ref i, ref lineNumber, buffer, output, (x) => output.AppendLine("{0};", x));
 					}
 					else if (LookAhead(template, i, "while"))
 					{
-						ParseLogicBlock("while", template, ref i, buffer, output, result);
+						ParseLogicBlock("while", template, parameters, ref i, ref lineNumber, buffer, output, result);
 					}
                     else
                     {
-                        ParseExpression(template, ref i, buffer, output);
+                        ParseExpression(template, parameters, ref i, ref lineNumber, buffer, output);
                     }
+
+                    lineNumber += CountOccurences(template, beforePos, i, Environment.NewLine);
                 }
                 else
                 {
@@ -136,12 +182,30 @@ namespace Machete
                 }
             }
 
-            FlushBuffer(BufferContents.Literal, buffer, output);
+            FlushBuffer(
+                parameters,
+                BufferContents.Literal,
+                buffer,
+                output,
+                lineNumber);
+        }
+
+        private static int CountOccurences(string template, int start, int end, string keyword)
+        {
+            int count = 0;
+
+            for (int i = start; i <= end; i++)
+            {
+                if (LookAhead(template, i, keyword))
+                    count++;
+            }
+
+            return count;
         }
 
         private static bool LookAhead(string template, int i, string keyword)
         {
-            if (i + keyword.Length >= template.Length)
+            if (i + keyword.Length > template.Length)
                 return false;
 
             for (int j = 0; j < keyword.Length; j++)
@@ -153,7 +217,7 @@ namespace Machete
             return true;
         }
 
-        private static int SearchAhead(string template, int i, string keyword)
+        private static int FindNext(string template, int i, string keyword)
         {
             for (int j = i; j < template.Length; j++)
             {
@@ -208,7 +272,11 @@ namespace Machete
             return -1;
         }
 
-        private static void AppendLine(StringBuilder output, string template, int start, int end)
+        private static void AppendLine(
+            StringBuilder output,
+            string template,
+            int start,
+            int end)
         {
             for(int i = start; i <= end; i++)
                 output.Append(template[i]);
@@ -216,18 +284,27 @@ namespace Machete
             output.Append(Environment.NewLine);
         }
 
-        private static void FlushBuffer(BufferContents state, StringBuilder buffer, StringBuilder output)
+        private static void FlushBuffer(
+            CodeGeneratorParameters parameters,
+            BufferContents contents,
+            StringBuilder buffer,
+            StringBuilder output,
+            int lineNumber)
         {
+            if (parameters.IncludeLineDirectives)
+                output.AppendLine($"#line {lineNumber}");
+
             if (buffer.Length > 0)
             {
-                switch (state)
+                switch (contents)
                 {
                     case BufferContents.Literal:
-                        output.AppendLine(string.Format("WriteLiteral(@\"{0}\");", buffer.ToString().Replace("\"", "\"\"")));
+                        string literal = buffer.ToString().Replace("\"", "\"\"");
+                        output.AppendLine($"WriteLiteral(@\"{literal}\");");
                         break;
 
                     case BufferContents.Expression:
-                        output.AppendLine(string.Format("Write({0});", buffer.ToString()));
+                        output.AppendLine($"Write({buffer.ToString()});");
                         break;
                 }
 
@@ -235,7 +312,13 @@ namespace Machete
             }
         }
 
-        private static void ParseCodeBlock(string template, ref int i, StringBuilder buffer, StringBuilder output)
+        private static void ParseCodeBlock(
+            string template,
+            CodeGeneratorParameters parameters,
+            ref int i,
+            ref int lineNumber,
+            StringBuilder buffer,
+            StringBuilder output)
         {
             int closeCurlyBrace = FindClosingCurlyBrace(template, i);
 
@@ -251,9 +334,20 @@ namespace Machete
             i = closeCurlyBrace + 1;
         }
 
-        private static void ParseLogicBlock(string type, string template, ref int i, StringBuilder buffer, StringBuilder output, CodeGeneratorResult result)
+        private static void ParseLogicBlock(
+            string type,
+            string template,
+            CodeGeneratorParameters parameters, 
+            ref int i,
+            ref int lineNumber,
+            StringBuilder buffer,
+            StringBuilder output,
+            CodeGeneratorResult result)
         {
-            int openParen = SearchAhead(template, i, "(");
+            if (parameters.IncludeLineDirectives)
+                output.AppendLine($"#line {lineNumber}");
+
+            int openParen = FindNext(template, i, "(");
 
             if (openParen == -1)
                 throw new MacheteException(string.Format("Expected ( while parsing {0}.", type));
@@ -263,7 +357,7 @@ namespace Machete
             if (closeParen == -1)
                 throw new MacheteException(string.Format("Matching ) not found while parsing {0}.", type));
 
-            int openCurlyBrace = SearchAhead(template, closeParen, "{");
+            int openCurlyBrace = FindNext(template, closeParen, "{");
 
             if (openCurlyBrace == -1)
                 throw new MacheteException(string.Format("Expected { while parsing {0}.", type));
@@ -273,20 +367,42 @@ namespace Machete
             if (closeCurlyBrace == -1)
                 throw new MacheteException(string.Format("Matching } not found while parsing {0}.", type));
 
+            output.Append(' '); // Append a single space to compensate for the @ sign.
             AppendLine(output, template, i, openCurlyBrace);
             
             int startCode = openCurlyBrace + 1;
             int endCode = closeCurlyBrace - 1;
-            
+
+            while (startCode < template.Length && LookAhead(template, startCode, Environment.NewLine))
+            {
+                startCode += Environment.NewLine.Length;
+                lineNumber++;
+            }
+
             if (startCode < endCode)
-                GenerateMethodBody(output, template, startCode, endCode, result);
+            {
+                GenerateMethodBody(
+                    output,
+                    template,
+                    parameters,
+                    startCode,
+                    endCode,
+                    ref lineNumber,
+                    result);
+            }
             
             output.AppendLine("}");
             
             i = closeCurlyBrace + 1;
         }
 				
-        private static void ParseExpression(string template, ref int i, StringBuilder buffer, StringBuilder output)
+        private static void ParseExpression(
+            string template,
+            CodeGeneratorParameters parameters,
+            ref int i,
+            ref int lineNumber,
+            StringBuilder buffer,
+            StringBuilder output)
         {
             bool finished = false;
 
@@ -304,7 +420,7 @@ namespace Machete
                     }
                     else if (template[i] == '[')
                     {
-                        ProcessIndexer(template, ref i, buffer);
+                        ParseIndexer(template, parameters, ref i, ref lineNumber, buffer);
                         finished = false;
                     }
                 }
@@ -318,10 +434,20 @@ namespace Machete
                     finished = true;
             }
 
-            FlushBuffer(BufferContents.Expression, buffer, output);
+            FlushBuffer(
+                parameters,
+                BufferContents.Expression,
+                buffer,
+                output,
+                lineNumber);
         }
 
-        private static void ProcessIndexer(string template, ref int i, StringBuilder buffer)
+        private static void ParseIndexer(
+            string template,
+            CodeGeneratorParameters parameters,
+            ref int i,
+            ref int lineNumber,
+            StringBuilder buffer)
         {
             int depth = 1;
 
@@ -344,9 +470,17 @@ namespace Machete
             }
         }
 
-		private static void ParseDeclaration(string type, string template, ref int i, StringBuilder buffer, StringBuilder output, Action<string> action)
+		private static void ParseDeclaration(
+            string type,
+            string template,
+            CodeGeneratorParameters parameters,
+            ref int i,
+            ref int lineNumber,
+            StringBuilder buffer,
+            StringBuilder output,
+            Action<string> action)
 		{
-			int endOfLine = SearchAhead(template, i, "\n");
+			int endOfLine = FindNext(template, i, "\n");
             int newLineLength = 1;
 
 			if (endOfLine == -1)
